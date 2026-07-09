@@ -3,265 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 빅데이터·AI 전공 마스터 챗봇 📊</title>
+    <title>📊 빅데이터·AI 전공 헬퍼 챗앱 📊</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #f8fafc;
-        }
-
-        .chat-container {
-            width: 500px;
-            height: 750px;
-            background-color: #1e293b;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #334155;
-        }
-
-        .chat-header {
-            background: linear-gradient(90deg, #0284c7, #3b82f6);
-            color: white;
-            padding: 20px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        
-        .chat-sub-header {
-            font-size: 0.8rem;
-            font-weight: normal;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #0f172a;
-        }
-
-        .message {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message-content {
-            padding: 14px 18px;
-            border-radius: 16px;
-            max-width: 85%;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            word-break: keep-all;
-        }
-
-        .user-message {
-            align-items: flex-end;
-        }
-
-        .user-message .message-content {
-            background-color: #38bdf8;
-            color: #0f172a;
-            font-weight: bold;
-            border-bottom-right-radius: 2px;
-        }
-
-        .bot-message {
-            align-items: flex-start;
-        }
-
-        .bot-message .message-content {
-            background-color: #1e293b;
-            color: #e2e8f0;
-            border-bottom-left-radius: 2px;
-            border: 1px solid #334155;
-        }
-
-        /* 🤖 챗봇 내부 출력 이미지 스타일 */
-        .message-image {
-            margin-top: 12px;
-            max-width: 100%;
-            border-radius: 8px;
-            border: 1px solid #475569;
-            display: block;
-        }
-
-        /* 추천 질문 선택 영역 */
-        .preset-questions {
-            padding: 12px 15px;
-            background-color: #1e293b;
-            border-top: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .preset-title {
-            font-size: 0.85rem;
-            color: #38bdf8;
-            font-weight: bold;
-        }
-
-        .preset-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 150px; /* 충분한 리스트 공간 제공 */
-            overflow-y: auto;   /* 넘칠 경우 스크롤 제공 */
-            padding-right: 4px;
-        }
-
-        .preset-btn {
-            background-color: #0f172a;
-            color: #94a3b8;
-            border: 1px solid #334155;
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 0.88rem;
-            line-height: 1.4;
-            transition: all 0.2s;
-            white-space: normal;  /* 텍스트 줄바꿈 보장 */
-            word-break: keep-all; /* 단어 단위 파괴 방지 */
-            flex-shrink: 0;       /* 부모 압착에 의한 찌그러짐 방지 */
-        }
-
-        .preset-btn:hover {
-            background-color: #1e293b;
-            color: #38bdf8;
-            border-color: #38bdf8;
-        }
-
-        /* 하단 입력창 및 파일 업로드 영역 */
-        .chat-input-area {
-            padding: 15px;
-            background-color: #1e293b;
-            border-top: 1px solid #334155;
-            display: flex;
-            gap: 10px;
-        }
-
-        .file-input-wrapper {
-            display: flex;
-            align-items: center;
-        }
-
-        .file-label {
-            background-color: #334155;
-            color: #e2e8f0;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-            transition: background 0.2s;
-            white-space: nowrap;
-            border: 1px solid #475569;
-        }
-
-        .file-label:hover {
-            background-color: #475569;
-        }
-
-        #csvFileInput {
-            display: none;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #334155;
-            background-color: #0f172a;
-            color: white;
-            border-radius: 8px;
-            outline: none;
-            font-size: 0.95rem;
-        }
-
-        .chat-input:focus {
-            border-color: #38bdf8;
-        }
-
-        .send-btn {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            padding: 0 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .send-btn:hover {
-            background-color: #2563eb;
-        }
-        
-        .chat-messages::-webkit-scrollbar, .preset-buttons::-webkit-scrollbar {
+        /* 커스텀 슬림 스크롤바 디자인 */
+        .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
-        .chat-messages::-webkit-scrollbar-thumb, .preset-buttons::-webkit-scrollbar-thumb {
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
             background-color: #475569;
-            border-radius: 3px;
+            border-radius: 9999px;
+        }
+        body {
+            background-color: #0b0f19;
         }
     </style>
 </head>
-<body>
+<body class="h-screen w-screen text-slate-100 font-sans flex items-center justify-center overflow-hidden bg-[#090d16]">
 
-<div class="chat-container">
-    <div class="chat-header">
-        📊 빅데이터·AI 전공 헬퍼 챗봇
-        <div class="chat-sub-header">중요 개념 및 헷갈리는 전공 용어 완벽 정리</div>
-    </div>
-    
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-            <div class="message-content">안녕하세요! 빅데이터 및 AI 전공자들을 위한 개념 마스터 챗봇입니다. 🤖<br><br>하단의 주요 전공 고민/질문 목록을 선택하시면 상세한 용어 정리와 개념을 파악할 수 있는 시각자료를 매칭해 드립니다. 직접 작성한 CSV 파일을 업로드하여 리스트를 자유롭게 바꿀 수도 있습니다.</div>
-        </div>
-    </div>
-    
-    <div class="preset-questions">
-        <div class="preset-title">💡 자주 묻는 전공 질문 (눌러서 답변 확인)</div>
-        <div class="preset-buttons" id="presetButtons">
+    <div class="flex h-full w-full md:h-screen md:w-screen md:aspect-[16/9] bg-[#0f172a] md:rounded-2xl md:border md:border-slate-800 md:shadow-2xl overflow-hidden relative flex-col md:flex-row">
+        
+        <div class="hidden md:flex w-72 lg:w-80 bg-[#1e293b] border-r border-slate-800 flex-col shrink-0 h-full">
+            <div class="p-4 bg-gradient-to-r from-sky-600 to-blue-600 flex items-center gap-3 shrink-0">
+                <i data-lucide="database" class="w-6 h-6 text-white animate-pulse"></i>
+                <div>
+                    <h1 class="text-sm md:text-base font-bold text-white tracking-wide">AI·빅데이터 헬퍼</h1>
+                    <p class="text-[11px] text-sky-200">전공 개념 마스터 웹앱</p>
+                </div>
             </div>
-    </div>
-    
-    <div class="chat-input-area">
-        <div class="file-input-wrapper">
-            <label for="csvFileInput" class="file-label">CSV 로드</label>
-            <input type="file" id="csvFileInput" accept=".csv" onchange="loadCSV(event)">
+
+            <div class="flex-1 p-4 overflow-hidden flex flex-col min-h-0">
+                <div class="flex items-center gap-2 mb-2 shrink-0">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-sky-400"></i>
+                    <span class="text-xs font-semibold text-sky-400 tracking-wider uppercase">자주 묻는 전공 질문</span>
+                </div>
+                <div id="desktopPresetButtons" class="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2 pr-1">
+                    </div>
+            </div>
+            
+            <div class="p-4 border-t border-slate-800 bg-[#111827] shrink-0 flex gap-2">
+                <label for="csvFileInput" class="flex-1 flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 py-2.5 px-2 rounded-xl cursor-pointer text-xs font-medium transition-all shadow-sm">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-sky-400"></i>
+                    <span>CSV 로드</span>
+                </label>
+                <input type="file" id="csvFileInput" accept=".csv" onchange="loadCSV(event)" class="hidden">
+                
+                <button onclick="resetToDefaultQA()" class="flex items-center justify-center gap-1 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/60 py-2.5 px-3 rounded-xl text-xs font-medium transition-all shadow-sm" title="기본 전공 질문으로 초기화">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>초기화</span>
+                </button>
+            </div>
         </div>
-        <input type="text" id="chatInput" class="chat-input" placeholder="전공 용어를 검색하거나 목록을 선택하세요..." onkeypress="handleKeyPress(event)">
-        <button class="send-btn" onclick="sendMessage()">전송</button>
+
+        <div class="flex-1 flex flex-col h-full bg-[#0f172a] relative min-w-0">
+            
+            <div class="flex md:hidden items-center justify-between p-4 bg-[#1e293b] border-b border-slate-800 shrink-0 shadow-md">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="database" class="w-5 h-5 text-sky-400"></i>
+                    <span class="text-sm font-bold text-slate-200 tracking-wide">AI·빅데이터 헬퍼</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <label for="csvFileInputMobile" class="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-xs py-1.5 px-2 rounded-lg cursor-pointer border border-slate-700 transition-all text-slate-300">
+                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-sky-400"></i>
+                        <span>CSV 로드</span>
+                    </label>
+                    <input type="file" id="csvFileInputMobile" accept=".csv" onchange="loadCSV(event)" class="hidden">
+                    
+                    <button onclick="resetToDefaultQA()" class="flex items-center gap-1 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 py-1.5 px-2 rounded-lg text-xs transition-all">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                        <span>초기화</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="chatMessages" class="flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-4" onclick="closeMobilePopup()">
+                <div class="flex gap-3 max-w-[85%]">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shrink-0 shadow-md">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                    </div>
+                    <div class="bg-[#1e293b] border border-slate-800 text-slate-200 p-3.5 md:p-4 rounded-2xl rounded-tl-none shadow-sm leading-relaxed text-sm md:text-base space-y-2">
+                        <p class="font-semibold text-sky-400">안녕하세요! 빅데이터 및 AI 전공 헬퍼입니다. 🤖</p>
+                        <p class="text-slate-300">PC 화면에서는 가로 세로가 균형 잡힌 **16:9 고해상도 앱 규격**으로 시각 자료가 왜곡 없이 깔끔하게 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 md:p-4 border-t border-slate-800 bg-[#1e293b]/50 backdrop-blur-md shrink-0 z-10" onclick="closeMobilePopup()">
+                <div class="max-w-4xl mx-auto flex gap-2">
+                    <input type="text" id="chatInput" 
+                           class="flex-1 bg-[#0f172a] text-white placeholder-slate-500 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl px-4 py-3 outline-none text-sm md:text-base transition-all shadow-inner" 
+                           placeholder="궁금한 전공 용어나 개념을 질문하세요..." 
+                           onkeypress="handleKeyPress(event)">
+                    <button onclick="sendMessage()" 
+                            class="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-medium px-4 md:px-5 rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-md shrink-0">
+                        <span class="hidden sm:inline text-sm">전송</span>
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="mobilePopup" class="md:hidden fixed bottom-0 left-0 right-0 bg-[#1e293b] border-t border-slate-800 rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 ease-out z-40 max-h-[50vh] flex flex-col">
+                <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-[#151f32] rounded-t-3xl shrink-0">
+                    <div class="flex items-center gap-1.5">
+                        <i data-lucide="help-circle" class="w-4 h-4 text-sky-400"></i>
+                        <span class="text-xs font-bold text-sky-400 tracking-wider uppercase">추천 질문 선택 목록</span>
+                    </div>
+                    <button onclick="toggleMobilePopup(event)" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div id="mobilePresetButtons" class="p-4 overflow-y-auto custom-scrollbar flex flex-col gap-2 flex-1 pb-8">
+                    </div>
+            </div>
+
+            <button id="mobileFab" onclick="toggleMobilePopup(event)" 
+                    class="md:hidden fixed bottom-20 right-5 w-14 h-14 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-full flex items-center justify-center shadow-2xl border border-sky-400/30 z-30 transition-transform active:scale-90 animate-bounce">
+                <i data-lucide="lightbulb" class="w-6 h-6"></i>
+            </button>
+
+        </div>
     </div>
-</div>
 
 <script>
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
-    const presetButtons = document.getElementById('presetButtons');
+    const desktopPresetButtons = document.getElementById('desktopPresetButtons');
+    const mobilePresetButtons = document.getElementById('mobilePresetButtons');
+    const mobilePopup = document.getElementById('mobilePopup');
 
-    // 탑재된 10대 핵심 인공지능 / 빅데이터 전공 용어 DB
-    let qaDatabase = {
+    // 원본 데이터 백업
+    const DEFAULT_QA_DATABASE = {
         "인공지능(AI)과 머신러닝(ML), 딥러닝(DL)의 차이점은 무엇인가요?": {
             answer: "AI는 인간의 지능을 모방하는 광범위한 기술이며, 머신러닝은 데이터로부터 학습하는 AI의 하위 집합입니다. 딥러닝은 인간의 뇌 신경망을 모방한 인공신경망(ANN)을 사용하는 머신러닝의 특수한 분야입니다. 구조적으로는 AI > ML > DL 포함 관계를 가집니다.",
             image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&auto=format&fit=crop"
@@ -304,14 +180,47 @@
         }
     };
 
+    let qaDatabase = JSON.parse(JSON.stringify(DEFAULT_QA_DATABASE));
+
     function renderPresetButtons() {
-        presetButtons.innerHTML = '';
+        desktopPresetButtons.innerHTML = '';
+        mobilePresetButtons.innerHTML = '';
+
         for (let question in qaDatabase) {
-            const btn = document.createElement('button');
-            btn.className = 'preset-btn';
-            btn.innerText = question;
-            btn.onclick = function() { clickQuestion(this); };
-            presetButtons.appendChild(btn);
+            const btnDesktop = document.createElement('button');
+            btnDesktop.className = "w-full text-left bg-[#0f172a] hover:bg-[#1e293b] hover:text-sky-400 text-slate-400 border border-slate-800/80 hover:border-sky-500/50 p-2.5 rounded-xl text-xs transition-all duration-200 shrink-0 shadow-sm line-clamp-2";
+            btnDesktop.innerText = question;
+            btnDesktop.onclick = function() { clickQuestion(this); };
+            desktopPresetButtons.appendChild(btnDesktop);
+
+            const btnMobile = document.createElement('button');
+            btnMobile.className = "w-full text-left bg-[#0f172a] active:bg-[#1e293b] text-slate-300 border border-slate-800 p-3.5 rounded-xl text-sm transition-colors duration-150 shrink-0";
+            btnMobile.innerText = question;
+            btnMobile.onclick = function() { clickQuestion(this); closeMobilePopup(); };
+            mobilePresetButtons.appendChild(btnMobile);
+        }
+    }
+
+    function resetToDefaultQA() {
+        qaDatabase = JSON.parse(JSON.stringify(DEFAULT_QA_DATABASE));
+        renderPresetButtons();
+        document.getElementById('csvFileInput').value = "";
+        document.getElementById('csvFileInputMobile').value = "";
+        appendMessage("🔄 전공 지식베이스가 초기 내장 프리셋 리스트로 안전하게 원상 복구되었습니다.", "bot");
+    }
+
+    function toggleMobilePopup(event) {
+        event.stopPropagation();
+        if (mobilePopup.classList.contains('translate-y-full')) {
+            mobilePopup.classList.remove('translate-y-full');
+        } else {
+            mobilePopup.classList.add('translate-y-full');
+        }
+    }
+
+    function closeMobilePopup() {
+        if (!mobilePopup.classList.contains('translate-y-full')) {
+            mobilePopup.classList.add('translate-y-full');
         }
     }
 
@@ -347,7 +256,7 @@
         if (Object.keys(newDatabase).length > 0) {
             qaDatabase = newDatabase;
             renderPresetButtons();
-            appendMessage("📌 전공 데이터 CSV가 성공적으로 적용되어 리스트가 업데이트되었습니다!", "bot-message");
+            appendMessage("📌 전공 지식베이스 CSV 연동 성공! 리스트 데이터가 새롭게 갱신되었습니다.", "bot");
         }
     }
 
@@ -366,131 +275,92 @@
         const messageText = chatInput.value.trim();
         if (messageText === '') return;
 
-        appendMessage(messageText, 'user-message');
+        appendMessage(messageText, 'user');
         chatInput.value = '';
 
         setTimeout(() => {
             const botResponse = getBotResponse(messageText);
-            appendMessage(botResponse.answer, 'bot-message', botResponse.image);
+            appendMessage(botResponse.answer, 'bot', botResponse.image);
         }, 400);
     }
 
-    function appendMessage(text, className, imageUrl = "") {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', className);
+    function appendMessage(text, sender, imageUrl = "") {
+        const wrapper = document.createElement('div');
+        wrapper.className = sender === 'user' ? "flex justify-end w-full" : "flex gap-3 max-w-[85%]";
 
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'message-content';
-        contentDiv.innerHTML = text.replace(/\n/g, '<br>');
-
-        if (imageUrl) {
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.className = 'message-image';
-            img.alt = '전공 시각화 이미지';
-            img.onerror = function() { this.style.display = 'none'; }; 
-            contentDiv.appendChild(img);
+        if (sender === 'user') {
+            wrapper.innerHTML = `
+                <div class="bg-gradient-to-br from-sky-500 to-blue-600 text-white font-medium p-3 rounded-xl rounded-tr-none shadow-md max-w-[85%] leading-relaxed text-xs md:text-sm word-break break-all">
+                    ${text}
+                </div>
+            `;
+        } else {
+            let imgHtml = imageUrl ? `<img src="${imageUrl}" class="mt-2 max-w-full rounded-xl border border-slate-700 shadow-sm max-h-[180px] object-cover" alt="시각자료" onerror="this.style.display='none'">` : '';
+            wrapper.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shrink-0 shadow-md">
+                    <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="bg-[#1e293b] border border-slate-800 text-slate-200 p-3 rounded-xl rounded-tl-none shadow-sm leading-relaxed text-xs md:text-sm max-w-full">
+                    <div>${text.replace(/\n/g, '<br>')}</div>
+                    ${imgHtml}
+                </div>
+            `;
         }
 
-        messageDiv.appendChild(contentDiv);
-        chatMessages.appendChild(messageDiv);
+        chatMessages.appendChild(wrapper);
+        lucide.createIcons();
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // 고도화된 질문/답변 매칭 로직 (대안 질문 및 키워드 기반)
     function getBotResponse(userMessage) {
-        const cleanUserMsg = userMessage.toLowerCase().replace(/\s+/g, ''); // 공백 제거 및 소문자화로 매칭률 향상
-    
-        // 1단계: 완전 일치 검사
-        if (qaDatabase[userMessage]) {
-            return qaDatabase[userMessage];
-        }
-    
-        // 2단계: 질문은 다르지만 같은 답변을 해야 하는 유사 표현/키워드 매칭 매핑 데이터
-        // 질문의 핵심 키워드를 트리거로 설정하여 동일한 답변 객체를 반환합니다.
+        const cleanUserMsg = userMessage.toLowerCase().replace(/\s+/g, '');
+
+        if (qaDatabase[userMessage]) return qaDatabase[userMessage];
+
         const 의도별_키워드_맵 = [
-            {
-                keywords: ['ai', '머신러닝', '딥러닝', '차이', '관계', '포함', 'ml', 'dl', '인공지능'],
-                targetQuestion: "인공지능(AI)과 머신러닝(ML), 딥러닝(DL)의 차이점은 무엇인가요?"
-            },
-            {
-                keywords: ['지도', '비지도', '레이블', '정답', '라벨', 'supervised', 'unsupervised'],
-                targetQuestion: "지도학습(Supervised)과 비지도학습(Unsupervised)의 핵심 차이는?"
-            },
-            {
-                keywords: ['과적합', '오버피팅', 'overfitting', '테스트데이터', '드롭아웃', '규제'],
-                targetQuestion: "과적합(Overfitting)이란 무엇이며 어떻게 해결하나요?"
-            },
-            {
-                keywords: ['5v', '빅데이터특징', 'v3', 'volume', 'velocity', 'variety'],
-                targetQuestion: "빅데이터의 5V 특성이 무엇인가요?"
-            },
-            {
-                keywords: ['하두프', '스파크', 'hadoop', 'spark', '맵리듀스', '인메모리', '디스크기반'],
-                targetQuestion: "하두프(Hadoop)와 스파크(Spark)의 가장 큰 차이점은?"
-            },
-            {
-                keywords: ['정밀도', '재현율', 'precision', 'recall', '트레이드오프', 'f1'],
-                targetQuestion: "분류 성능 지표 중 정밀도(Precision)와 재현율(Recall)의 차이는?"
-            },
-            {
-                keywords: ['정형', '반정형', '비정형', 'json', 'xml', 'csv', '텍스트이미지'],
-                targetQuestion: "정형 데이터, 반정형 데이터, 비정형 데이터의 차이는?"
-            },
-            {
-                keywords: ['차원의저주', '차원축소', 'pca', '피처', '변수개수', 'dimensionality'],
-                targetQuestion: "데이터 사이언스에서 차원의 저주(Curse of Dimensionality)란?"
-            },
-            {
-                keywords: ['불균형', 'imbalance', 'smote', '오버샘플링', '언더샘플링'],
-                targetQuestion: "데이터 불균형(Data Imbalance) 문제는 어떻게 해결하나요?"
-            },
-            {
-                keywords: ['임베딩', 'embedding', '벡터', 'vector', '자연어', 'nlp'],
-                targetQuestion: "자연어 처리(NLP)에서 임베딩(Embedding)이란 무엇인가요?"
-            }
+            { keywords: ['ai', '머신러닝', '딥러닝', '차이', '관계', 'ml', 'dl', '인공지능'], targetQuestion: "인공지능(AI)과 머신러닝(ML), 딥러닝(DL)의 차이점은 무엇인가요?" },
+            { keywords: ['지도', '비지도', '레이블', '정답', '라벨', 'supervised', 'unsupervised'], targetQuestion: "지도학습(Supervised)과 비지도학습(Unsupervised)의 핵심 차이는?" },
+            { keywords: ['과적합', '오버피팅', 'overfitting', '테스트데이터', '드롭아웃', '규제'], targetQuestion: "과적합(Overfitting)이란 무엇이며 어떻게 해결하나요?" },
+            { keywords: ['5v', '빅데이터특징', 'v3', 'volume', 'velocity', 'variety'], targetQuestion: "빅데이터의 5V 특성이 무엇인가요?" },
+            { keywords: ['하두프', '스파크', 'hadoop', 'spark', '맵리듀스', '인메모리'], targetQuestion: "하두프(Hadoop)와 스파크(Spark)의 가장 큰 차이점은?" },
+            { keywords: ['정밀도', '재현율', 'precision', 'recall', '트레이드오프', 'f1'], targetQuestion: "분류 성능 지표 중 정밀도(Precision)와 재현율(Recall)의 차이는?" },
+            { keywords: ['정형', '반정형', '비정형', 'json', 'xml', 'csv'], targetQuestion: "정형 데이터, 반정형 데이터, 비정형 데이터의 차이는?" },
+            { keywords: ['차원의저주', '차원축소', 'pca', '피처', '변수', 'dimensionality'], targetQuestion: "데이터 사이언스에서 차원의 저주(Curse of Dimensionality)란?" },
+            { keywords: ['불균형', 'imbalance', 'smote', '오버샘플링', '언더샘플링'], targetQuestion: "데이터 불균형(Data Imbalance) 문제는 어떻게 해결하나요?" },
+            { keywords: ['임베딩', 'embedding', '벡터', 'vector', '자연어', 'nlp'], targetQuestion: "자연어 처리(NLP)에서 임베딩(Embedding)이란 무엇인가요?" }
         ];
-        
-        // 사용자의 입력 문장에 설정된 키워드들이 많이 포함되어 있는지 매칭 점수 계산
+
         let bestMatchQuestion = null;
         let maxScore = 0;
-        
+
         for (let item of 의도별_키워드_맵) {
             let score = 0;
             for (let keyword of item.keywords) {
-                if (userMessage.toLowerCase().includes(keyword)) {
-                    score++; // 키워드가 포함될 때마다 매칭 점수 +1
-                }
+                if (userMessage.toLowerCase().includes(keyword)) score++;
             }
-            // 가장 연관성이 높은(점수가 높은) 질문을 후보로 선정 (최소 1개 이상 매칭 시)
             if (score > maxScore) {
                 maxScore = score;
                 bestMatchQuestion = item.targetQuestion;
             }
         }
-    
-        // 유사 키워드 조건에 부합하는 질문을 찾았다면 해당 답변 반환
-        if (bestMatchQuestion && qaDatabase[bestMatchQuestion]) {
-            return qaDatabase[bestMatchQuestion];
-        }
-    
-        // 3단계: 기본 루프 매칭 (기존 로직 유지 - 질문 문자열 자체에 포함 관계가 있을 때)
+
+        if (bestMatchQuestion && qaDatabase[bestMatchQuestion]) return qaDatabase[bestMatchQuestion];
+
         for (let question in qaDatabase) {
             const cleanQuestion = question.toLowerCase().replace(/\s+/g, '');
             if (cleanUserMsg.includes(cleanQuestion) || cleanQuestion.includes(cleanUserMsg)) {
                 return qaDatabase[question];
             }
         }
-    
-        // 일치하는 항목이 없을 때
+
         return {
-            answer: "죄송합니다. 입력하신 단어나 질문과 매칭되는 전공 지식을 찾지 못했습니다. 아래 목록의 추천 질문을 이용하시거나 단어 위주(예: '하두프', '과적합')로 다시 검색해 보세요! 💡",
+            answer: "입력하신 단어와 매칭되는 지식을 찾지 못했습니다. 리스트를 열어 추천 질문을 터치하시거나 단어 위주(예: '과적합', '스파크')로 다시 입력해 보세요! 💡",
             image: ""
         };
     }
 
     renderPresetButtons();
+    lucide.createIcons();
 </script>
-
 </body>
 </html>
